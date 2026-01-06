@@ -8,3 +8,8 @@ mod test_26;
 mod test_283;
 mod test_844;
 mod test_977;
+mod test_209;
+mod test_904;
+mod test_76_w;
+mod kama_58;
+mod test_59;
