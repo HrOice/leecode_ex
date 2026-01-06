@@ -15,7 +15,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use crate::link::leecode_interview_02_07::{print_list, ListNode};
-pub(crate) fn build_list(vals: &[i32], n: usize) -> crate::link::leecode_interview_02_07::Link {
+pub(crate) fn build_list(vals: &[i32], n: i32) -> crate::link::leecode_interview_02_07::Link {
     let mut head: crate::link::leecode_interview_02_07::Link = None;
     let mut tail: crate::link::leecode_interview_02_07::Link = None;
     let mut n = n;
@@ -36,20 +36,71 @@ pub(crate) fn build_list(vals: &[i32], n: usize) -> crate::link::leecode_intervi
         tail = Some(node.clone());
         if n == 0 && cur.is_none() {
             cur = Some(node);
-        } else {
+        } else if n > 0 {
             n -= 1;
         }
+    }
+    if n < 0 {
+        return head;
     }
     tail.unwrap().borrow_mut().next = cur;
 
     head
 }
+
+
+// a -> b -> c -> d -> e -> f -> g -> d
+// a ----x ------d --- y ---xxx ---- z -> d
+// slow 1 step / fast 2 step
+// 相遇在环内 xxx
+// slow : x + y
+// fast : x + y + n*(y + z)
+// slow * 2 = fast
+// 2 (x+y) = x + y + n(y + z)
+// x + y = ny + nz
+// x = (n-1)y + nz = (n - 1)(y+z) + z
+// y + z 是完整一圈
+// 在相遇点开始 slow 继续走，slow2 从起点开始走，再次相遇时就是环的起点
+fn find_ring_start(head: crate::link::leecode_interview_02_07::Link) -> crate::link::leecode_interview_02_07::Link {
+    let mut slow = head.clone();
+    let mut fast = head.clone();
+    loop {
+        slow = slow.unwrap().borrow_mut().next.clone();
+        fast = fast.unwrap().borrow_mut().next.clone();
+        if fast.is_none() {
+            return None;
+        }
+        fast = fast.unwrap().borrow_mut().next.clone();
+        if fast.is_none() {
+            return None;
+        }
+        if fast == slow {
+            break;
+        }
+    }
+    if head == slow {
+        return head;
+    }
+    let mut slow2 = head.clone();
+    loop {
+        slow = slow.unwrap().borrow_mut().next.clone();
+        slow2 = slow2.unwrap().borrow_mut().next.clone();
+        if slow == slow2 {
+            break;
+        }
+    }
+    slow
+}
 #[test]
 fn test() {
     // list1
-    let list1_head = build_list(&[3,2,0,-4], 1); // 1,2,6,11,3,4,5
-
+    let list1_head = build_list(&[1,2,3,4,5,6,7], -1); // 1,2,6,11,3,4,5
+    let res = find_ring_start(list1_head);
     // let reversed = crate::link::leecode_interview_02_07::find_intersect(list1_head, list2_head);
     print!("reversed: ");
-    // print_list(reversed);
+    if res.is_none() {
+        println!("None");
+    } else {
+        println!("{}", res.unwrap().borrow().val);
+    }
 }
