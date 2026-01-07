@@ -64,37 +64,33 @@ pub(crate) fn build_list(vals: &[i32], n: i32) -> crate::link::leecode_interview
 fn find_ring_start(head: crate::link::leecode_interview_02_07::Link) -> crate::link::leecode_interview_02_07::Link {
     let mut slow = head.clone();
     let mut fast = head.clone();
-    loop {
-        slow = slow.unwrap().borrow_mut().next.clone();
-        fast = fast.unwrap().borrow_mut().next.clone();
+
+    while let (Some(fast_node), Some(slow_node)) = (fast.clone(), slow.clone()) {
+        fast = fast_node.borrow().next.clone();
+        slow = slow_node.borrow().next.clone();
         if fast.is_none() {
             return None;
         }
-        fast = fast.unwrap().borrow_mut().next.clone();
-        if fast.is_none() {
-            return None;
-        }
+        fast = fast.unwrap().borrow().next.clone();
         if fast == slow {
             break;
         }
     }
-    if head == slow {
-        return head;
+    if slow.is_none() || fast.is_none() {
+        return None;
     }
     let mut slow2 = head.clone();
-    loop {
-        slow = slow.unwrap().borrow_mut().next.clone();
-        slow2 = slow2.unwrap().borrow_mut().next.clone();
-        if slow == slow2 {
-            break;
-        }
+    while slow != slow2 {
+        slow = slow.unwrap().borrow().next.clone();
+        slow2 = slow2.unwrap().borrow().next.clone();
     }
+
     slow
 }
 #[test]
 fn test() {
     // list1
-    let list1_head = build_list(&[1,2,3,4,5,6,7], -1); // 1,2,6,11,3,4,5
+    let list1_head = build_list(&[1,2,3,4,5,6,7], 6); // 1,2,6,11,3,4,5
     let res = find_ring_start(list1_head);
     // let reversed = crate::link::leecode_interview_02_07::find_intersect(list1_head, list2_head);
     print!("reversed: ");

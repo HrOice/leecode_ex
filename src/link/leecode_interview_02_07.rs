@@ -30,34 +30,26 @@ impl PartialEq for ListNode {
     }
 }
 
-//
+// cur_a, cur_b 各遍历两个链表一次，第一次的想等就是交点
+// x1 + z + x2
+// x2 + z + x1
 fn find_intersect(list_a: Link, list_b: Link) -> Link {
-    if list_a.is_none() || list_b.is_none() {
-        return None;
-    }
     let mut cur_a = list_a.clone();
     let mut cur_b = list_b.clone();
-    while cur_a.is_some() && cur_b.is_some() {
-        cur_a = cur_a.unwrap().borrow().next.clone();
-        cur_b = cur_b.unwrap().borrow().next.clone();
+
+    while cur_a != cur_b {
+        cur_a = match cur_a {
+            Some(node) => node.borrow().next.clone(),
+            None => list_b.clone(),
+        };
+
+        cur_b = match cur_b {
+            Some(node) => node.borrow().next.clone(),
+            None => list_a.clone(),
+        };
     }
 
-    if cur_a.is_none() {
-        cur_a = list_a;
-    }
-    if cur_b.is_none() {
-        cur_b = list_b;
-    }
-    while cur_a.is_some() && cur_b.is_some() {
-        cur_a = cur_a.unwrap().borrow().next.clone();
-        cur_b = cur_b.unwrap().borrow().next.clone();
-    }
-
-    if cur_a.is_none() {
-        cur_b
-    } else {
-        cur_a
-    }
+    cur_a
 }
 pub(crate) fn build_list(vals: &[i32]) -> (Link, Link) {
     let mut head: Link = None;
@@ -95,11 +87,20 @@ fn test() {
     // list1
     let (list1_head, list1_tail) = build_list(&[1, 2,6,11]); // 1,2,6,11,3,4,5
     list1_tail.unwrap().borrow_mut().next = intersect_head.clone();
+    // list1 = x1 + z
+    // list2 = x2 + z
+
 
     // list2
-    let (list2_head, list2_tail) = build_list(&[9, 8]); // 9,8,3,4,5
-    list2_tail.unwrap().borrow_mut().next = intersect_head.clone();
+    let (list2_head, list2_tail) = build_list(&[9, 8,7,6]); // 9,8,3,4,5
+    // list2_tail.unwrap().borrow_mut().next = intersect_head.clone();
+    // 1,2,6,11,3,4,5,9,8,3,4,5
+    // 9,8,3,4, 5,1,2,6,11,3,4,5
+    // x1 + x2 + 2z - x2 - z - x1 = z
 
+    // 1，2，6，11，3，4，5，9，8
+    // 9，8，1，2，6，11，3，4，5
+    // 相交时只能为None了
 
 
     let reversed = find_intersect(list1_head, list2_head);
