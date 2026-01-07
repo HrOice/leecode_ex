@@ -13,6 +13,19 @@
 // 输入: nums = [0]
 // 输出: [0]
 
+// 双指针法，[0..slow) 已处理 [slow..fast)待替换 [fast..end]未扫描
+// 1
+pub fn move_zeroes_review(nums: &mut Vec<i32>) {
+    let mut slow = 0;
+    for fast in 0..nums.len() {
+        if nums[fast] != 0 {
+            let tmp = nums[fast];
+            nums[fast] = 0;
+            nums[slow] = tmp;
+            slow += 1;
+        }
+    }
+}
 
 pub fn move_zeroes(nums: &mut Vec<i32>) {
     let mut slow = 0;
@@ -29,6 +42,6 @@ pub fn move_zeroes(nums: &mut Vec<i32>) {
 #[test]
 fn test() {
     let mut nums = vec![0,1,0,3,12];
-    move_zeroes(&mut nums);
+    move_zeroes_review(&mut nums);
     assert_eq!(nums, vec![1,3,12,0,0]);
 }

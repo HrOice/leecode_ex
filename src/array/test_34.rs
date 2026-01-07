@@ -19,6 +19,80 @@
 // 输入：nums = [], target = 0
 // 输出：[-1,-1]
 
+
+// fast 前进，遇到val = fast，将slow赋值，
+// fast 继续前进，遇到val != fast，停止
+// 否则 -1 这是暴力搜索，需要O(n)
+// 要达到O(logn),需要二分搜索
+// 二分搜索，
+pub fn search_range_review(nums: Vec<i32>, target: i32) -> Vec<i32> {
+    if nums.is_empty() {
+        return vec![-1, -1];
+    }
+    let lower = lower_bound_review(&nums, target);
+    if lower == -1 {
+        return vec![-1, -1];
+    }
+    let upper = upper_bound_review(&nums, target);
+    vec![lower, upper]
+
+}
+// 1,2,3,3,4,5,6,6,6,7,7,7,8
+fn lower_bound_review(nums: &Vec<i32>, target: i32) -> i32 {
+    if nums.len() == 0 {
+        return -1;
+    }
+    let mut left = 0;
+    let mut right = nums.len() - 1;
+    while left < right {
+        let mid = left + (right - left) / 2;
+        let mid_val = nums[mid];
+        if mid_val < target {
+            left = mid + 1;
+        } else {
+            right = mid;
+        }
+    }
+    if nums[left] != target {
+        return -1;
+    }
+    right as i32
+}
+fn upper_bound_review(nums: &Vec<i32>, target: i32) -> i32 {
+    if nums.len() == 0 {
+        return -1;
+    }
+    if nums.len() == 1 && target == nums[0] {
+        return 0;
+    }
+    let mut left = 0;
+    let mut right = nums.len() - 1;
+    while left < right {
+        let mid = left + (right - left) / 2;
+        let mid_val = nums[mid];
+        if mid_val <= target {
+            left = mid + 1
+        } else {
+            right = mid;
+        }
+    }
+    if left == nums.len() -1 && target == nums[left] {
+        return left as i32;
+    }
+    left as i32 - 1
+}
+
+#[test]
+fn test_bin_search_review() {
+    // assert_eq!(lower_bound_review(&vec![1, 2, 3,3,3, 4, 5], 3), 2);
+    // assert_eq!(upper_bound_review(&vec![1, 2, 3,3,3, 4, 5], 3), 4);
+    // assert_eq!(search_range_review(vec![1, 2, 3,3,3, 4, 5], 3), [2,4]);
+    // assert_eq!(search_range_review(vec![5,7,7,8,8,10], 8), [3,4]);
+    // assert_eq!(search_range_review(vec![5,7,7,8,8,10], 6), [-1, -1]);
+    // assert_eq!(search_range_review(vec![1], 1), [0,0]);
+    assert_eq!(search_range_review(vec![2,2], 2), [0,1]);
+}
+
 pub fn search_range(nums: Vec<i32>, target: i32) -> Vec<i32> {
     if nums.is_empty() {
         return vec![-1, -1]

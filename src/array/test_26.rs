@@ -33,6 +33,26 @@
 // 解释：函数应该返回新的长度 5 ， 并且原数组 nums 的前五个元素被修改为 0, 1, 2, 3, 4 。不需要考虑数组中超出新长度后面的元素。
 //
 
+// 双指针，当fast = slow时，fast前进，否则slow前进，并交换slow与fast
+// [0..slow] 正确
+// (slow..fast) 待处理
+// [fast..end)待扫描
+fn remove_duplicates_review(nums: &mut Vec<i32>) -> i32 {
+    if nums.len() == 0 {
+        return 0;
+    }
+    let mut slow = 0;
+    for fast in 1..nums.len() {
+        let val = nums[fast];
+        if nums[slow] == val {
+            continue;
+        }
+        slow += 1;
+        nums[slow] = val;
+    }
+
+    slow as i32 + 1
+}
 
 // [0..slow] 正确序列
 // (slow..fast) 需要替换的区间
@@ -54,6 +74,10 @@ pub fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
 fn test_2() {
     let mut nums = vec![0,0,1,1,1,2,2,3,3,4];
     let val = 3;
-    let result = remove_duplicates(&mut nums);
+    let result = remove_duplicates_review(&mut nums);
     assert_eq!(result, 5);
+    assert_eq!(2, remove_duplicates_review(&mut vec![1,1,2]));
+    assert_eq!(1, remove_duplicates_review(&mut vec![1,1]));
+    assert_eq!(2, remove_duplicates_review(&mut vec![1,2]));
+    assert_eq!(0, remove_duplicates_review(&mut vec![]));
 }

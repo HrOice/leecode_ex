@@ -60,6 +60,21 @@
 //     }
 //     size as i32
 // }
+// fast 遇到val前进，否则将slow 后面进行交换
+// [0..slow) 有效
+// [slow..fast]待改
+// (fast..end) 未扫描
+pub fn remove_element_review(nums: &mut Vec<i32>, val: i32) -> i32 {
+    let mut slow = 0;
+    for fast in 0..nums.len() {
+        if val == nums[fast] {
+            continue;
+        }
+        nums[slow] = nums[fast];
+        slow += 1;
+    }
+    slow as i32
+}
 
 pub fn remove_element(nums: &mut Vec<i32>, val: i32) -> i32 {
     let mut slow = 0;

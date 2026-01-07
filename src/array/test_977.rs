@@ -20,6 +20,36 @@
 // -104 <= nums[i] <= 104
 // nums 已按 非递减顺序 排序
 
+pub fn sorted_squares_review(nums: Vec<i32>) -> Vec<i32> {
+    let mut res = vec![0; nums.len()];
+    let mut left = 0;
+    let mut right = nums.len() - 1;
+    let mut idx = nums.len() - 1;
+    while idx >= 0 {
+        let n_right = nums[right] * nums[right];
+        let n_left = nums[left] * nums[left];
+        if n_right > n_left {
+            res[idx] = n_right;
+            right -= 1;
+        } else {
+            res[idx] = n_left;
+            left += 1;
+        }
+        if idx == 0 {
+            break;
+        }
+        idx -= 1;
+    }
+    res
+}
+#[test]
+fn test_review() {
+    let nums = vec![1,2];
+    let res = sorted_squares_review(nums);
+    assert_eq!(res, vec![1,4]);
+}
+
+
 // 0左侧数字的绝对值应插入到右侧的什么地方
 pub fn sorted_squares(nums: Vec<i32>) -> Vec<i32> {
     let mut left = 0;
@@ -52,7 +82,7 @@ pub fn sorted_squares(nums: Vec<i32>) -> Vec<i32> {
 #[test]
 fn test() {
     let nums = vec![1,2];
-    let res = sorted_squares(nums);
+    let res = sorted_squares_review(nums);
     assert_eq!(res, vec![1,4]);
 }
 

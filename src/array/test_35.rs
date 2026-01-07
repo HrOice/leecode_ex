@@ -25,6 +25,38 @@
 // nums 为 无重复元素 的 升序 排列数组
 // -104 <= target <= 104
 
+// 找到第一个>= target的位置
+// 左边是false ｜ 右边是true，找到这个分界点
+// 可以转换成找到lower_bound的二分查找，查找值为target <= val,第一个true
+// 二分法 1,3,5,6
+// 为什么要while left <= right, 因为要把区间缩到1个大小才能确定最终位置
+pub fn search_insert_review(nums: Vec<i32>, target: i32) -> i32 {
+    let mut left = 0;
+    let mut right = nums.len() as i32 - 1;
+    while left <= right {
+        let mid = left + (right - left) / 2;
+        if nums[mid as usize] < target {
+            left = mid + 1;
+        } else if nums[mid as usize] > target {
+            right = mid -1 ;
+        } else {
+            return mid as i32;
+        }
+    }
+    left as i32
+}
+
+#[test]
+fn test_review() {
+    let nums = vec![1,3,5,6];
+    let res = search_insert_review(nums.clone(), 7);
+    assert_eq!(res, 4);
+    assert_eq!(search_insert_review(nums.clone(), 1), 0);
+    assert_eq!(search_insert_review(nums.clone(), 2), 1);
+    assert_eq!(search_insert_review(nums.clone(), 4), 2);
+    assert_eq!(search_insert_review(nums, 0), 0);
+}
+
 use std::cmp::Ordering;
 
 fn search(arr: &[i32], target: i32) -> usize {

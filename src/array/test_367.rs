@@ -18,6 +18,25 @@
 // 解释：返回 false ，因为 3.742 * 3.742 = 14 但 3.742 不是一个整数。
 //
 
+// 同69，查唯一值
+pub fn is_perfect_square_review(num: i32) -> bool {
+    if num < 2 {
+        return true;
+    }
+    let mut left = 2;
+    let mut right = num / 2;
+    while left <= right { // 需要计算最后一个单独的mid
+        let mid = left + (right - left) / 2;
+        if mid * mid == num {
+            return true;
+        } else if mid * mid < num {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    false
+}
 
 pub fn is_perfect_square(num: i32) -> bool {
     if num < 2 {
@@ -41,6 +60,6 @@ pub fn is_perfect_square(num: i32) -> bool {
 #[test]
 fn test_1() {
     let x = 14;
-    let res = is_perfect_square(x);
+    let res = is_perfect_square_review(16);
     assert_eq!(res, true);
 }

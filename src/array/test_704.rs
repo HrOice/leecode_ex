@@ -15,7 +15,21 @@
 // 你可以假设 nums 中的所有元素是不重复的。
 // n 将在 [1, 10000]之间。
 // nums 的每个元素都将在 [-9999, 9999]之间。
-
+pub fn search_review(nums: Vec<i32>, target: i32) -> i32 {
+    let mut left:i32 = 0;
+    let mut right:i32 = nums.len() as i32 - 1;
+    while left <= right { // 为了找最后的一个值
+        let mid = left + (right - left) / 2;
+        if nums[mid as usize] == target {
+            return mid as i32;
+        } else if nums[mid as usize] > target {
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+    -1
+}
 fn search(arr: &[i32], target: i32) -> i32 {
     let mut left = 0;
     let mut right = arr.len() - 1;
@@ -48,8 +62,6 @@ fn search_open(arr: &[i32], target: i32) -> i32 {
     -1
 }
 
-mod test {
-    use crate::array::test_704::{search, search_open};
 
     #[test]
     fn test_1() {
@@ -60,8 +72,7 @@ mod test {
 
     #[test]
     fn test_2() {
-        let nums = [-1,0,3,5,9,12];
-        let res = search_open(&nums, 9);
-        assert_eq!(res, 4);
+        let nums = vec![5];
+        let res = search_review(nums, -5);
+        assert_eq!(res, -1);
     }
-}

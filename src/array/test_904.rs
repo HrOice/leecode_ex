@@ -38,6 +38,47 @@
 // 1 <= fruits.length <= 105
 // 0 <= fruits[i] < fruits.length
 
+// 可以使用map，但是为了减少空间使用，需要其他办法
+// 就是中间连续最大长度，中间的条件是不能有第三个数字
+// 可以考虑指针
+// [3,3,3,1,2,1,1,2,3,3,4]
+//  s     t f              这个时候要把s移动到t，f继续走 。 s = 0, f = 4, t = 0,如何定位新t，用两个指针处理，这两个指针遇到新的水果更新，有些复杂
+//        s       t f      这时s要移动到t，t是2的开始
+//                s t   f  这时t是连续3开始
+// t就是记录f之前连续数字的开始位置
+// f 前进，t如何定位，
+// 规律：遇到种类之内的，长度+1，否则最后连续长度 + 1
+//
+
+pub fn total_fruit_review(fruits: Vec<i32>) -> i32 {
+    let mut slow = -1;
+    let mut last = 0; // 上一个水果
+    let mut second_last = 0; // 上上个水果
+    let mut last_count = 0;
+    let mut res = 0;
+    let mut cur_len = 0;
+
+    for fast in 0..fruits.len() {
+        let fruit = fruits[fast];
+        if fruit == last || fruit == second_last {
+            cur_len += 1;
+        } else {
+            cur_len = 1 + last_count;
+        }
+        if fruit == last {
+            last_count += 1;
+        } else {
+            second_last = last;
+            last = fruit;
+            last_count = 1;
+        }
+        res = res.max(cur_len);
+    }
+
+    res as i32
+
+}
+
 use std::collections::HashMap;
 
 pub fn total_fruit(fruits: Vec<i32>) -> i32 {
@@ -93,6 +134,6 @@ pub fn total_fruit1(fruits: Vec<i32>) -> i32 {
 #[test]
 fn test() {
     let fruits = vec![3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4];
-    let res = total_fruit1(fruits);
+    let res = total_fruit_review(fruits);
     assert_eq!(res, 5);
 }
