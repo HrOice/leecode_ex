@@ -23,6 +23,63 @@
 // 输出："example good a"
 // 解释：如果两个单词间有多余的空格，反转后的字符串需要将单词间的空格减少到仅有一个。
 
+mod review {
+    // 先处理多余空格
+    // 翻转全部
+    // 单词翻转
+
+    // [  hello  world  ]
+    //
+    pub fn reverse_words(s: String) -> String {
+        let mut s = s.chars().collect::<Vec<char>>();
+        let mut write = 0;
+        let mut read = 0; // 快慢指针
+        while read < s.len() {
+            while read < s.len() && s[read].is_ascii_whitespace() {
+                read += 1;
+            }
+            while read < s.len() && !s[read].is_ascii_whitespace() {
+                s.swap(read, write);
+                write += 1;
+                read += 1;
+            }
+            if read < s.len() {
+                s[write] = ' ';
+                write += 1;
+            }
+        }
+        if write > 0 && s[write - 1] == ' ' {
+            write -= 1;
+        }
+        s.truncate(write);
+        let n = s.len();
+        reverse(&mut s, 0, n - 1);
+        let mut j = 0;
+        for i in 0..=n {
+            if i == n || s[i].is_ascii_whitespace() {
+                reverse(&mut s, j, i - 1);
+                j = i + 1;
+            }
+        }
+        String::from_iter(s)
+    }
+
+    #[test]
+    fn test() {
+        let res = reverse_words("  hello  world  ".into());
+        println!("{}", res);
+        let res = reverse_words("hello  world".into());
+        println!("{}", res);
+    }
+
+    fn reverse(s: &mut Vec<char>, mut start: usize, mut end: usize) {
+        while start < end {
+            s.swap(start, end);
+            start += 1;
+            end -= 1;
+        }
+    }
+}
 // split 需要额外空间，相当于O(n)
 // 使用空间O(1)解决，不引入额外结构。
 // 翻转整个字符串

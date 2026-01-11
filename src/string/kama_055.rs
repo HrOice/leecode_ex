@@ -18,6 +18,36 @@
 // 1 <= k < 10000,
 // 1 <= s.length < 10000;
 
+mod review {
+    // 翻转单词
+    fn kama_055(s: String, k: usize) -> String {
+        let mut s = s.chars().collect::<Vec<_>>();
+        let n = s.len();
+        reverse(&mut s, 0, n - 1);
+        reverse(&mut s, k, n - 1);
+        reverse(&mut s, 0, k - 1);
+        String::from_iter(s.into_iter())
+    }
+
+    fn reverse(s: &mut Vec<char>, mut start: usize, mut end: usize) {
+        while start < end {
+            s.swap(start, end);
+            start += 1;
+            end -= 1;
+        }
+    }
+    #[test]
+    fn test() {
+        assert_eq!(crate::string::kama_055::kama_055("abcdefg".to_string(), 1), "gabcdef");
+        assert_eq!(crate::string::kama_055::kama_055("abcdefg".to_string(), 2), "fgabcde");
+        assert_eq!(crate::string::kama_055::kama_055("abcdefg".to_string(), 3), "efgabcd");
+        assert_eq!(crate::string::kama_055::kama_055("abcdefg".to_string(), 4), "defgabc");
+        assert_eq!(crate::string::kama_055::kama_055("abcdefg".to_string(), 5), "cdefgab");
+        assert_eq!(crate::string::kama_055::kama_055("abcdefg".to_string(), 6), "bcdefga");
+        assert_eq!(crate::string::kama_055::kama_055("abcdefg".to_string(), 7), "abcdefg");
+        assert_eq!(crate::string::kama_055::kama_055("abcdef".to_string(), 2), "efabcd");
+    }
+}
 // abcdefg -> fgcdeab -> fgabecd
 // 双指针，right指向倒数k，left从0开始，交换，前进
 // 这个思路在 s >= 2*k时成立，其他情况不成立，所以不可用

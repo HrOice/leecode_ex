@@ -15,6 +15,32 @@
 // 数据范围：1 <= s.length < 10000。
 
 
+fn replace_by_number_review(s: String) -> String {
+    let n = s.len();
+    let mut s = s.chars().collect::<Vec<_>>();
+    let number_count = s.iter().filter(|&c| *c >= '0' && *c <= '9').count();
+    s.resize(number_count * 5 + n, '_');
+    let mut j = n as i32 - 1;
+    let mut i = s.len() as i32 - 1;
+    while i >= 0 && j >= 0 {
+        if s[j as usize] >= '0' && s[j as usize] <= '9' {
+            s[i as usize] = 'r';
+            s[i as usize - 1] = 'e';
+            s[i as usize - 2] = 'b';
+            s[i as usize - 3] = 'm';
+            s[i as usize - 4] = 'u';
+            s[i as usize - 5] = 'n';
+            i -= 6;
+        } else {
+            s[i as usize] = s[j as usize];
+            i -= 1;
+        }
+        j -= 1;
+    }
+    String::from_iter(s)
+}
+
+
 // a1b2c3--------
 fn replace_by_number(s: String) -> String {
     let mut chars = s.chars()
@@ -52,6 +78,6 @@ fn replace_by_number(s: String) -> String {
 
 #[test]
 fn test() {
-    let res = replace_by_number(String::from("3a4"));
+    let res = replace_by_number_review(String::from("3a4"));
     println!("{}", res);
 }

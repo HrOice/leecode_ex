@@ -19,6 +19,39 @@
 // 1 <= s.length <= 10^4
 // s 仅由小写英文组成
 // 1 <= k <= 10^4
+
+mod review {
+
+    pub fn reverse_str(s: String, k: i32) -> String {
+        let mut k = k as usize;
+        let mut s = s.chars().collect::<Vec<_>>();
+        let n = s.len();
+        for i in (0..s.len()).step_by(2*k as usize) {
+            if i + k <= s.len() {
+                reverse(&mut s, i, i + k as usize - 1)
+            } else {
+                reverse(&mut s, i, n - i - 1)
+            }
+        }
+        String::from_iter(s)
+    }
+
+    fn reverse(s: &mut Vec<char>, mut start: usize, mut end: usize) {
+        while start < end {
+            s.swap(start, end);
+            start += 1;
+            end -= 1;
+        }
+    }
+
+    #[test]
+    fn test() {
+        let res = reverse_str("abcdefg".to_string(), 2);
+        assert_eq!(res, "bacdfeg");
+        assert_eq!(reverse_str("abcd".to_string(), 4), "dcba");
+        assert_eq!(crate::string::lc_541::reverse_str("abcdefg".to_string(), 8), "gfedcba");
+    }
+}
 pub fn reverse_str(s: String, k: i32) -> String {
     let mut s = s.into_bytes();
     let k = k as usize;

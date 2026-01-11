@@ -18,6 +18,49 @@
 // 输出：-1
 // 解释："leeto" 没有在 "leetcode" 中出现，所以返回 -1 。
 
+mod review {
+    pub fn str_str(haystack: String, needle: String) -> i32 {
+        let s = haystack.chars().collect::<Vec<_>>();
+        let pattern = needle.chars().collect::<Vec<_>>();
+        let next = get_next(&pattern);
+
+        let mut j = 0; // pattern
+        for i in 0..s.len() {
+            while j > 0 && pattern[j] != s[i] {
+                j = next[j - 1];
+            }
+            if pattern[j] == s[i] {
+                j += 1;
+            }
+            if j == pattern.len() {
+                return (i - pattern.len() + 1) as i32;
+            }
+        }
+        -1
+    }
+
+    #[test]
+    fn test_str_str() {
+        assert_eq!(1, crate::string::lc_28::str_str("abab".to_string(), "bab".to_string()));
+        assert_eq!(3, crate::string::lc_28::str_str("aabaabaaf".to_string(), "aabaaf".to_string()));
+    }
+
+    fn get_next(s: &Vec<char>) -> Vec<usize> {
+        let mut j = 0;
+        let mut next = vec![0; s.len()];
+        for i in 1..s.len() {
+            while j > 0 && s[i] != s[j] {
+                j = next[j - 1];
+            }
+            if s[j] == s[i] {
+                j += 1;
+            }
+            next[i] = j;
+        }
+        next
+    }
+}
+
 // leeto 前缀表 0 0 0 0 0
 // pattern = aabaaf, str = aabaabaaf
 // 前缀表 KPM思路: 找到pattern中的重复像，减少重复匹配
@@ -56,7 +99,7 @@
 
 //  a  b  a  b  a  c  a  b  a  b  a  d
 // [0, 0, 1, 2, 3, 0, 1, 2, 3, 4, 5, 0]
-
+//           k                 n
 fn get_next(pattern: &Vec<char>) -> Vec<usize> {
     let mut next = vec![0; pattern.len()];
     let mut j = 0;
@@ -77,7 +120,7 @@ fn test_next() {
     assert_eq!(vec![0,1,0,1,2,0], get_next(&vec!['a','a','b','a','a', 'f']));
     assert_eq!(vec![0,0,0,1], get_next(&vec!['a','b','c','a']));
     assert_eq!(vec![0,0,1,1,2,3], get_next(&vec!['a','b','a','a','b','a']));
-    let res = get_next(&"ababacababad".to_string().chars().collect::<Vec<char>>());
+    let res = get_next(&"abcabcabcabc".to_string().chars().collect::<Vec<char>>());
     println!("{:?}", res);
 }
 
