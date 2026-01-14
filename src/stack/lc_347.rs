@@ -76,6 +76,8 @@ impl Heap {
         Heap { heap: vec![] }
     }
 
+
+
     fn push(&mut self, x: i32) {
         self.heap.push(x);
         self.sift_up(self.heap.len() - 1);
@@ -124,6 +126,42 @@ impl Heap {
     fn peek(&self) -> i32 {
         self.heap[0]
     }
+}
+
+// 由下自上寻找大值
+// 找到倒数第一层,节点 n / 2 - 1
+fn heapify(nums: &mut Vec<i32>) {
+    if nums.len() < 1 {
+        return;
+    }
+    for i in (0..=nums.len()/ 2 - 1).rev() {
+        sift_down(nums, i);
+    }
+}
+fn sift_down(nums: &mut Vec<i32>, mut i: usize) {
+    loop {
+        let mut largest = i;
+        let left = i * 2 + 1;
+        let right = i * 2 + 2;
+        if right < nums.len() && nums[largest] < nums[right] {
+            largest = right;
+        }
+        if left < nums.len() && nums[largest] < nums[left] {
+            largest = left;
+        }
+        if largest == i {
+            return;
+        }
+        nums.swap(i, largest);
+        i = largest;
+    }
+}
+
+#[test]
+fn test_heapify() {
+    let mut nums = vec![1, 2, 4, 6, 3, 5, 7];
+    heapify(&mut nums);
+    println!("{:?}", nums);
 }
 
 #[test]
