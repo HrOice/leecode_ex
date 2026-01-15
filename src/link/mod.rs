@@ -6,6 +6,7 @@ mod leecode_24;
 mod leecode_19;
 mod leecode_interview_02_07;
 mod lc_142;
+mod review;
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
